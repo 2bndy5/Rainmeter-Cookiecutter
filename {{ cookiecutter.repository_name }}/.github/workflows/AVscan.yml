@@ -1,0 +1,16 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Anti-virus Check
+
+on: [push]
+
+jobs:
+  AVscan:
+    runs-on: ubuntu-latest
+    name: AV scan
+    steps:
+      - name: Checkout resources to scan
+        uses: actions/checkout@v2
+      
+      - name: AV scan using ClamAV
+        uses: djdefi/gitavscan@2

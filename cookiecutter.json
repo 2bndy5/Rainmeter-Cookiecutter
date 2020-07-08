@@ -1,0 +1,17 @@
+{
+    "author_full_name": "my full name",
+    "github_username" : "my.github.account",
+    "req_rainmeter_version": "4.3",
+    "_skins_path": "",
+    "_year": "2,020",
+    "import_skin": "{{ cookiecutter.import_skin }}",
+    "project_name": "{{ cookiecutter.import_skin }}",
+    "repository_name": "{{ cookiecutter.project_name.replace(' ', '_') + '_Rainmeter_Skin' }}",
+    "short_description": "A collection of my skins for Rainmeter",
+    "license": [
+        "MIT",
+        "CC BY-SA",
+        "GNU GPLv3"
+    ],
+    "_copy_without_render": ["*.github/*"]
+}
