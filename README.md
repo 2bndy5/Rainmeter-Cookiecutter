@@ -1,1 +1,0 @@
-Rainmeter-Cookiecutter
