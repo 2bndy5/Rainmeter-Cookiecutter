@@ -4,21 +4,7 @@
     "req_rainmeter_version": "4.3",
     "_skins_path": "",
     "_year": "2,020",
-    "_installed": {
-        "Skin":  [
-            "Create a new skin",
-            "Goo-e",
-            "illustro",
-            "Ipod Nano 6g",
-            "LCARS Door"
-        ],
-        "Layout":  [
-            "@Backup",
-            "Goo-e & LCARS",
-            "XMB"
-        ]
-    },
-    "_skins": "{{ cookiecutter._skins }}",
+    "_installed": "{{ cookiecutter._installed }}",
     "_layouts": "{{ cookiecutter._layouts }}",
     "import_type": ["Skin", "Layout"],
     "import": "{{ cookiecutter._installed[cookiecutter.import_type] }}",

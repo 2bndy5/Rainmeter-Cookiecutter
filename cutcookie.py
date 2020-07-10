@@ -12,10 +12,10 @@ from cookiecutter.main import cookiecutter
 defaults = {
     "req_rainmeter_version": "4.3",
     "author_full_name": os.getenv("USERNAME"),
-    "_skins": ["Create a new skin"],
     "_skins_path": "",
     "_layouts": {},
     "_layout_path": "",
+    "_installed": {"Skin": ["Create a new skin"], "Layout": []},
     "_year": time.strftime("%Y", time.localtime()),
 }
 
@@ -66,7 +66,7 @@ def main():
             for d in os.listdir(defaults["_skins_path"]):
                 if not d.startswith("@"):
                     # ignore @Backup & @Vault folders
-                    defaults["_skins"].append(d)
+                    defaults["_installed"]["Skin"].append(d)
 
         # now collect layouts
         for d in os.listdir(defaults["_layout_path"]):
@@ -84,6 +84,7 @@ def main():
                         # avoid duplicate entries
                         needed_skins.append(root_config)
             defaults["_layouts"][d] = needed_skins
+            defaults["_installed"]["Layout"].append(d)
 
     # NOTE debugging output functions
     # dump to JSON

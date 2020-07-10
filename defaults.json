@@ -1,16 +1,6 @@
 {
     "req_rainmeter_version": "4.3.1.3321",
     "author_full_name": "ytreh",
-    "_skins": [
-        "Create a new skin",
-        "Goo-e",
-        "illustro",
-        "Ipod Nano 6g",
-        "LCARS Door",
-        "New XMB",
-        "SysColor",
-        "Weather.com"
-    ],
     "_skins_path": "C:\\Users\\ytreh\\Documents\\Rainmeter\\Skins",
     "_layouts": {
         "@Backup": [
@@ -29,5 +19,23 @@
         ]
     },
     "_layout_path": "C:\\Users\\ytreh\\AppData\\Roaming\\Rainmeter\\Layouts",
+    "_installed": {
+        "Skin": [
+            "Create a new skin",
+            "Goo-e",
+            "illustro",
+            "Ipod Nano 6g",
+            "LCARS Door",
+            "New XMB",
+            "SysColor",
+            "Weather.com"
+        ],
+        "Layout": [
+            "@Backup",
+            "Goo-e & LCARS",
+            "illustro default",
+            "XMB"
+        ]
+    },
     "_year": "2020"
 }
