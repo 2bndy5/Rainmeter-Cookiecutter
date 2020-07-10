@@ -1,20 +1,17 @@
 {
-    "author_full_name": "my full name",
-    "github_username" : "my.github.account",
-    "req_rainmeter_version": "4.3",
-    "_skins_path": "",
-    "_year": "2,020",
-    "_installed": "{{ cookiecutter._installed }}",
-    "_layouts": "{{ cookiecutter._layouts }}",
-    "import_type": ["Skin", "Layout"],
-    "import": "{{ cookiecutter._installed[cookiecutter.import_type] }}",
-    "project_name": "{{ cookiecutter.import }}",
-    "repository_name": "{{ cookiecutter.project_name.replace(' ', '_') + '_Rainmeter_Skin' }}",
-    "short_description": "A collection of my skins for Rainmeter",
-    "license": [
-        "MIT",
-        "CC BY-SA",
-        "GNU GPLv3"
-    ],
-    "_copy_without_render": ["*.github/*"]
+    "author_full_name": "{{ cookiecutter.author_full_name }}",
+    "github_username": "{{ cookiecutter.github_username }}",
+    "req_rainmeter_version": "{{ cookiecutter.req_rainmeter_version }}",
+    "_year": "{{ cookiecutter._year }}",
+    "_skins_path": "{{ cookiecutter._skins_path }}",
+    "_layouts_path": "{{ cookiecutter._layouts_path }}",
+    "installed": "{{ cookiecutter.installed }}",
+    "import_type": "{{ cookiecutter.import_type }}",
+    "import": "{{ cookiecutter.import }}",
+    "_load_skin": "{{ cookiecutter._load_skin }}",
+    "project_name": "{{ cookiecutter.project_name }}",
+    "repository_name": "{{ cookiecutter.repository_name }}",
+    "short_description": "{{ cookiecutter.short_description }}",
+    "license": "{{ cookiecutter.license }}",
+    "_copy_without_render": "{{ cookiecutter._copy_without_render }}"
 }

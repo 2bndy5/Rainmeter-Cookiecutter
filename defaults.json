@@ -1,25 +1,11 @@
 {
-    "req_rainmeter_version": "4.3.1.3321",
     "author_full_name": "ytreh",
+    "github_username": "my.github.account",
+    "req_rainmeter_version": "4.3.1.3321",
+    "_year": "2020",
     "_skins_path": "C:\\Users\\ytreh\\Documents\\Rainmeter\\Skins",
-    "_layouts": {
-        "@Backup": [
-            "Goo-e",
-            "LCARS Door"
-        ],
-        "Goo-e & LCARS": [
-            "LCARS Door",
-            "Goo-e"
-        ],
-        "illustro default": [
-            "illustro"
-        ],
-        "XMB": [
-            "New XMB"
-        ]
-    },
-    "_layout_path": "C:\\Users\\ytreh\\AppData\\Roaming\\Rainmeter\\Layouts",
-    "_installed": {
+    "_layouts_path": "C:\\Users\\ytreh\\AppData\\Roaming\\Rainmeter\\Layouts",
+    "installed": {
         "Skin": [
             "Create a new skin",
             "Goo-e",
@@ -37,5 +23,14 @@
             "XMB"
         ]
     },
-    "_year": "2020"
+    "import_type": "Skin",
+    "import": "SysColor",
+    "_load_skin": "SysColor\\SysColor.ini",
+    "project_name": "SysColor",
+    "repository_name": "SysColor_Rainmeter_Skin",
+    "short_description": "A collection of my skins for Rainmeter",
+    "license": "MIT",
+    "_copy_without_render": [
+        "*.github/*"
+    ]
 }
