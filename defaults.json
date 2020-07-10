@@ -1,7 +1,7 @@
 {
     "req_rainmeter_version": "4.3.1.3321",
     "author_full_name": "ytreh",
-    "import_skin": [
+    "_skins": [
         "Create a new skin",
         "Goo-e",
         "illustro",
@@ -12,5 +12,22 @@
         "Weather.com"
     ],
     "_skins_path": "C:\\Users\\ytreh\\Documents\\Rainmeter\\Skins",
+    "_layouts": {
+        "@Backup": [
+            "Goo-e",
+            "LCARS Door"
+        ],
+        "Goo-e & LCARS": [
+            "LCARS Door",
+            "Goo-e"
+        ],
+        "illustro default": [
+            "illustro"
+        ],
+        "XMB": [
+            "New XMB"
+        ]
+    },
+    "_layout_path": "C:\\Users\\ytreh\\AppData\\Roaming\\Rainmeter\\Layouts",
     "_year": "2020"
 }

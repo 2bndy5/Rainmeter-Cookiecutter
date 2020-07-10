@@ -4,8 +4,25 @@
     "req_rainmeter_version": "4.3",
     "_skins_path": "",
     "_year": "2,020",
-    "import_skin": "{{ cookiecutter.import_skin }}",
-    "project_name": "{{ cookiecutter.import_skin }}",
+    "_installed": {
+        "Skin":  [
+            "Create a new skin",
+            "Goo-e",
+            "illustro",
+            "Ipod Nano 6g",
+            "LCARS Door"
+        ],
+        "Layout":  [
+            "@Backup",
+            "Goo-e & LCARS",
+            "XMB"
+        ]
+    },
+    "_skins": "{{ cookiecutter._skins }}",
+    "_layouts": "{{ cookiecutter._layouts }}",
+    "import_type": ["Skin", "Layout"],
+    "import": "{{ cookiecutter._installed[cookiecutter.import_type] }}",
+    "project_name": "{{ cookiecutter.import }}",
     "repository_name": "{{ cookiecutter.project_name.replace(' ', '_') + '_Rainmeter_Skin' }}",
     "short_description": "A collection of my skins for Rainmeter",
     "license": [

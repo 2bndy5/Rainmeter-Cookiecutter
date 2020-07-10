@@ -1,7 +1,7 @@
 .. image:: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.repository_name }}/workflows/Anti-virus%20Check/badge.svg
     :target: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.repository_name }}/actions?query=workflow%3A%22Anti-virus+Check%22
 
-.. image:: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.repository_name }}/workflows/RMSKIN%20Package/badge.svg
+.. image:: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.repository_name }}/workflows/RMSKIN%20Packager/badge.svg
     :target: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.repository_name }}/actions?query=workflow%3A%22RMSKIN+Packager%22
 
 .. image:: https://img.shields.io/github/v/release/rainmeter/rainmeter?label=Rainmeter&logo=github&style=plastic

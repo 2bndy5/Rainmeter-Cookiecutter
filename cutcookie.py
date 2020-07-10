@@ -12,12 +12,24 @@ from cookiecutter.main import cookiecutter
 defaults = {
     "req_rainmeter_version": "4.3",
     "author_full_name": os.getenv("USERNAME"),
-    "import_skin": ["Create a new skin"],
+    "_skins": ["Create a new skin"],
     "_skins_path": "",
-    "_year": time.strftime('%Y', time.localtime())
+    "_layouts": {},
+    "_layout_path": "",
+    "_year": time.strftime("%Y", time.localtime()),
 }
 
-parser = configparser.ConfigParser()
+
+def read_config(file_path):
+    parser = configparser.ConfigParser(default_section="Rainmeter")
+    try:  # trys to open file with default utf-8 encoding
+        parser.read(file_path)
+    except configparser.MissingSectionHeaderError:
+        # This exception on this file likely means encoding is utf-16
+        parser.read(file_path, encoding="utf-16")
+    finally:
+        return parser
+
 
 rm_reg_key = None
 try:
@@ -38,32 +50,46 @@ def main():
         defaults["req_rainmeter_version"] = defaults["req_rainmeter_version"][
             0
         ].replace(" r", ".")
-        try:  # trys to open file with default utf-8 encoding
-            parser.read(os.getenv("APPDATA") + "\\Rainmeter\\Rainmeter.ini")
-        except configparser.MissingSectionHeaderError:
-            # This exception on this file likely means encoding is utf-16
-            parser.read(
-                os.getenv("APPDATA") + "\\Rainmeter\\Rainmeter.ini", encoding="utf-16"
-            )
+        defaults["_layout_path"] = os.getenv("APPDATA") + os.sep + "Rainmeter\\Layouts"
 
-        if "Rainmeter" in parser and "SkinPath" in parser["Rainmeter"]:
-            if parser["Rainmeter"]["SkinPath"].endswith(os.sep):
+        # get path to Rainmeter skins
+        parsed = read_config(os.getenv("APPDATA") + "\\Rainmeter\\Rainmeter.ini")
+        if "Rainmeter" in parsed and "SkinPath" in parsed["Rainmeter"]:
+            if parsed["Rainmeter"]["SkinPath"].endswith(os.sep):
                 # remove trailing path seperator
-                defaults["_skins_path"] = parser["Rainmeter"]["SkinPath"][:-1]
+                defaults["_skins_path"] = parsed["Rainmeter"]["SkinPath"][:-1]
             else:
-                defaults["_skins_path"] = parser["Rainmeter"]["SkinPath"]
+                defaults["_skins_path"] = parsed["Rainmeter"]["SkinPath"]
 
-        # defaults["_skins_path"] = defaults["_skins_path"]
+        # grab names of installed skins
         if len(defaults["_skins_path"]):
             for d in os.listdir(defaults["_skins_path"]):
                 if not d.startswith("@"):
-                    defaults["import_skin"].append(d)
+                    # ignore @Backup & @Vault folders
+                    defaults["_skins"].append(d)
+
+        # now collect layouts
+        for d in os.listdir(defaults["_layout_path"]):
+            # read layout files in subfolders
+            parsed = read_config(
+                defaults["_layout_path"] + os.sep + d + os.sep + "Rainmeter.ini"
+            )
+            needed_skins = []
+            for key in parsed.keys():
+                # exclude inactive skins & [Rainmeter] section
+                if "Active" in parsed[key] and bool(int(parsed[key]["Active"])):
+                    # only grab root config name as a necessary skin for layout
+                    root_config = key.split(os.sep)[0]
+                    if not root_config in needed_skins:
+                        # avoid duplicate entries
+                        needed_skins.append(root_config)
+            defaults["_layouts"][d] = needed_skins
 
     # NOTE debugging output functions
     # dump to JSON
     with open("defaults.json", "w") as file:
         json.dump(defaults, file, indent=4)
-    
+
     # print to console
     # for k, v in defaults.items():
     #     print("{} = {}".format(k, v))
