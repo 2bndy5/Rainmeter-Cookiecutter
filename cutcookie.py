@@ -8,69 +8,125 @@ import winreg
 import configparser
 import json
 from cookiecutter.main import cookiecutter
+from cookiecutter import prompt
 
 defaults = {
-    "req_rainmeter_version": "4.3",
     "author_full_name": os.getenv("USERNAME"),
-    "import_skin": ["Create a new skin"],
+    "github_username": "my.github.account",
+    "req_rainmeter_version": "4.3",
+    "_year": time.strftime("%Y", time.localtime()),
     "_skins_path": "",
-    "_year": time.strftime('%Y', time.localtime())
+    "_layouts_path": "",
+    "installed": {"Skin": ["Create a new skin"], "Layout": []},
+    "import_type": ["Skin", "Layout"],
+    "import": [],
+    "_load_skin": "NONE",
+    "project_name": "",
+    "repository_name": "",
+    "short_description": "A collection of my skins for Rainmeter",
+    "license": ["MIT", "CC BY-SA", "GNU GPLv3"],
+    "_copy_without_render": ["*.github/*"],
 }
 
-parser = configparser.ConfigParser()
 
-rm_reg_key = None
-try:
-    rm_reg_key = winreg.OpenKey(
-        winreg.HKEY_LOCAL_MACHINE,
-        "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Rainmeter",
-    )
-except FileNotFoundError:
-    print("Rainmeter is not installed!")
+def read_config(file_path):
+    parser = configparser.ConfigParser(default_section="Rainmeter")
+    try:  # trys to open file with default utf-8 encoding
+        parser.read(file_path)
+    except configparser.MissingSectionHeaderError:
+        # This exception on this file likely means encoding is utf-16
+        parser.read(file_path, encoding="utf-16")
+    finally:
+        return parser
 
 
-def main():
+def aggregate():
     """Gathers default data before prompting user for input."""
+    rm_reg_key = None
+    try:
+        rm_reg_key = winreg.OpenKey(
+            winreg.HKEY_LOCAL_MACHINE,
+            "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Rainmeter",
+        )
+    except FileNotFoundError:
+        print("Rainmeter is not installed!")
     if rm_reg_key is not None:
         defaults["req_rainmeter_version"] = winreg.QueryValueEx(
             rm_reg_key, "DisplayVersion"
-        )
-        defaults["req_rainmeter_version"] = defaults["req_rainmeter_version"][
-            0
-        ].replace(" r", ".")
-        try:  # trys to open file with default utf-8 encoding
-            parser.read(os.getenv("APPDATA") + "\\Rainmeter\\Rainmeter.ini")
-        except configparser.MissingSectionHeaderError:
-            # This exception on this file likely means encoding is utf-16
-            parser.read(
-                os.getenv("APPDATA") + "\\Rainmeter\\Rainmeter.ini", encoding="utf-16"
-            )
+        )[0].replace(" r", ".")
+        defaults["_layouts_path"] = os.getenv("APPDATA") + os.sep + "Rainmeter\\Layouts"
 
-        if "Rainmeter" in parser and "SkinPath" in parser["Rainmeter"]:
-            if parser["Rainmeter"]["SkinPath"].endswith(os.sep):
+        # get path to Rainmeter skins
+        parsed = read_config(os.getenv("APPDATA") + "\\Rainmeter\\Rainmeter.ini")
+        if "Rainmeter" in parsed and "SkinPath" in parsed["Rainmeter"]:
+            if parsed["Rainmeter"]["SkinPath"].endswith(os.sep):
                 # remove trailing path seperator
-                defaults["_skins_path"] = parser["Rainmeter"]["SkinPath"][:-1]
+                defaults["_skins_path"] = parsed["Rainmeter"]["SkinPath"][:-1]
             else:
-                defaults["_skins_path"] = parser["Rainmeter"]["SkinPath"]
+                defaults["_skins_path"] = parsed["Rainmeter"]["SkinPath"]
 
-        # defaults["_skins_path"] = defaults["_skins_path"]
+        # grab names of installed skins
         if len(defaults["_skins_path"]):
             for d in os.listdir(defaults["_skins_path"]):
                 if not d.startswith("@"):
-                    defaults["import_skin"].append(d)
+                    # ignore @Backup & @Vault folders
+                    defaults["installed"]["Skin"].append(d)
 
-    # NOTE debugging output functions
-    # dump to JSON
-    with open("defaults.json", "w") as file:
-        json.dump(defaults, file, indent=4)
-    
-    # print to console
-    # for k, v in defaults.items():
-    #     print("{} = {}".format(k, v))
+        # now collect layouts
+        for d in os.listdir(defaults["_layouts_path"]):
+            defaults["installed"]["Layout"].append(d)
+
+
+def prompt_user():
+    # Prompt user for input
+    for key, value in defaults.items():
+        if not key.startswith("_"):
+            if isinstance(value, list):
+                defaults[key] = prompt.read_user_choice(key, value)
+            elif isinstance(value, str):
+                defaults[key] = prompt.read_user_variable(key, value)
+            if key.endswith("import_type"):
+                defaults["import"] = defaults["installed"][defaults[key]]
+            elif key.endswith("import"):
+                defaults["project_name"] = defaults[key]
+                defaults["repository_name"] = (
+                    defaults[key].replace(" ", "_") + "_Rainmeter_Skin"
+                )
+                # promt user to pick skin to load if importing an installed skin
+                if (
+                    defaults["import_type"] == "Skin"
+                    and defaults["import"] != "Create a new skin"
+                ):
+                    # now ask the user which skin to load on-install
+                    skin_configs = []
+                    for dirpath, _, filenames in os.walk(
+                        defaults["_skins_path"] + os.sep + defaults[key]
+                    ):
+                        for f in filenames:
+                            if f.endswith(".ini"):
+                                skin_configs.append(
+                                    dirpath.replace(
+                                        defaults["_skins_path"] + os.sep, "",
+                                    )
+                                    + os.sep
+                                    + f
+                                )
+                    defaults["_load_skin"] = prompt.read_user_choice(
+                        "skin to load", skin_configs
+                    )
+            elif key.endswith("project_name"):
+                defaults["repository_name"] = (
+                    defaults[key].replace(" ", "_") + "_Rainmeter_Skin"
+                )
+
+    # NOTE for debugging -> dump to JSON
+    # with open("defaults.json", "w") as file:
+    #     json.dump(defaults, file, indent=4)
 
 
 if __name__ == "__main__":
-    main()
-    # now merge discovered defaults and begin cookie-cutting
-    cookiecutter(".", output_dir="..", extra_context=defaults)
+    aggregate()
+    prompt_user()
+    # now pass user input and begin cookie-cutting
+    cookiecutter(".", output_dir="..", extra_context=defaults, no_input=True)
 
