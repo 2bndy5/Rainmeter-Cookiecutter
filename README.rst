@@ -14,15 +14,31 @@ Features
 * An extra workflow (includes a badge) to scan the repository for
   malicious software using ClamAV. This is useful if your reository
   contains executable binaries like 3rd-party Rainmeter plugins or
-  exe files.
+  exe files. That said, it is still *strongly recommended* that you
+  monitor what executable binary files get added to your repository.
 * License options include GNU GPLv3, CC BY-SA-4.0, or MIT.
-* Ability to import an installed Rainmeter Skin. Only 1 skin can be
-  specified during cookiecutter process, but more can be added after
-  cookiecutter has finished generating your repository.
-* If not importing a skin, then cookiecutter will create a new skin
-  using the repository name as the Skin's name (with root config
-  ``<repo-name>.ini`` file & ``Variables.inc`` file in the skin's
-  ``@Resources`` folder)
+* Ability to import an installed Rainmeter Skin or a Layout of Skins.
+  
+  - If importing a Skin:
+  
+    * Only 1 skin can be specified if importing a skin during the
+      cookiecutter process, but more can be added after
+      cookiecutter has finished generating your repository.
+    * User input must specify what skin (from a numbered list of
+      choices) to load when the released rmskin package is installed.
+        
+  - If importing a Layout:
+  
+    * All active skins in the Layout are imported as
+      well as the Layout file.
+    * The Layout is automatically set to load when the released
+      rmskin package is installed
+* If not importing a skin or layout (default option), then cookiecutter
+  will create a new skin using the "project name" (also specified by
+  the user) as the Skin's name (with root config ``<project_name>.ini``
+  file & ``Variables.inc`` file in the skin's ``@Resources`` folder).
+  The newly created skin's .ini file is automatically set to load when
+  the released rmskin package is installed.
 * A ``README.rst`` file to greet github-browsing users, and includes
   instructions on how to install your Rainmeter Project
 * A ``RMSKIN.ini`` file for creating a valid ``rmskin`` file. This
@@ -47,21 +63,9 @@ repository:
     pip install -r requirements.txt
     python cutcookie.py
 
-If don't start the process with the above command, then you will not
-have certain options available. These options include picking an
-installed skin to import, finding the currently installed version
-of Rainmeter, and identifying the current year for licensing. If
-for some reason the above command does not work, please submit an
-issue and try the following at root folder of this repository:
-
-.. code-block:: shell
-
-    pip install -r requirements.txt
-    cookiecutter
-
-.. note:: The second command is the conventional method, but does
-    not get data about your local system's Rainmeter installation.
-    Also make sure that Python's script folder (defaults to
-    ``%APPDATA%\Python\Python3x\Scripts`` where 3x is the version of
-    python you have installed) is in your Windows environment
-    variable, ``PATH``. Otherwise, try ``python -m cookiecutter``.
+.. important:: The ``cookiecutter`` command is the conventional method for
+  typical cookiecutter templates, but it does not get data about your
+  local system's Rainmeter installation. Furthermore this template's
+  ``cutcookie.py`` overrides the ``cookiecutter`` command's user input
+  process so that it can provide a slightly more complex sequence of
+  options to the user.
