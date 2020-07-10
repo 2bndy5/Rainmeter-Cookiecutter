@@ -7,18 +7,23 @@ importing = "{{ cookiecutter.import }}"
 rm_skins_path = r"{{ cookiecutter._skins_path }}"
 rm_layouts_path = r"{{ cookiecutter._layouts_path }}"
 
+
 def remove_blank_skin():
-    for dirpath, dirnames, filenames in os.walk(os.getcwd() + os.sep + "Skins", topdown=False):
+    for dirpath, dirnames, filenames in os.walk(
+        os.getcwd() + os.sep + "Skins", topdown=False
+    ):
         for f in filenames:
             os.remove(dirpath + os.sep + f)
         for d in dirnames:
             os.rmdir(dirpath + os.sep + d)
-    
+
+
 def import_skin(root_config):
     print(f"importing {root_config} skin")
     new_dir = "Skins" + os.sep + root_config
     skin_root = rm_skins_path + os.sep + root_config
     shutil.copytree(skin_root, new_dir)
+
 
 def read_config(file_path):
     parser = configparser.ConfigParser(default_section="Rainmeter")
@@ -30,13 +35,10 @@ def read_config(file_path):
     finally:
         return parser
 
+
 def gather_layout_deps(layout_name):
     parsed = read_config(
-        rm_layouts_path
-        + os.sep
-        + layout_name
-        + os.sep
-        + "Rainmeter.ini"
+        rm_layouts_path + os.sep + layout_name + os.sep + "Rainmeter.ini"
     )
     needed_skins = []
     for key in parsed.keys():
@@ -49,15 +51,16 @@ def gather_layout_deps(layout_name):
                 needed_skins.append(root_config)
     return needed_skins
 
-if import_type == 'Skin':
+
+if import_type == "Skin":
     # ``importing`` is a str
     if importing != "Create a new skin":
         remove_blank_skin()
         import_skin(importing)
-elif import_type == 'Layout':
+elif import_type == "Layout":
     # ``importing`` is a list
     remove_blank_skin()
-    # needed_skins = 
+    # needed_skins =
     for name in gather_layout_deps(importing):
         import_skin(name)
     # copy layout file
