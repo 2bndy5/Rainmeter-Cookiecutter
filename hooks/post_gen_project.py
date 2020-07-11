@@ -76,8 +76,10 @@ elif import_type == "Layout":
 if init_commit:
     run(["git", "init"])
     try:
+        # sometimes ``git init`` generates a blank README.md
         os.remove("README.md")
     except FileNotFoundError:
+        # sometimes not
         pass
     run(["git", "add", "."])
     run(["git", "commit", "-m", "Initial commit"])
