@@ -13,5 +13,6 @@
     "repository_name": "{{ cookiecutter.repository_name }}",
     "short_description": "{{ cookiecutter.short_description }}",
     "license": "{{ cookiecutter.license }}",
-    "_copy_without_render": "{{ cookiecutter._copy_without_render }}"
+    "_copy_without_render": "{{ cookiecutter._copy_without_render }}",
+    "_init_commit": "{{ cookiecutter._init_commit }}"
 }

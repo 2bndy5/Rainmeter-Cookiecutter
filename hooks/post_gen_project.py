@@ -1,12 +1,14 @@
 import os
 import shutil
 import configparser
+from subprocess import run
 
 import_type = "{{ cookiecutter.import_type }}"
 importing = "{{ cookiecutter.import }}"
 rm_skins_path = r"{{ cookiecutter._skins_path }}"
 rm_layouts_path = r"{{ cookiecutter._layouts_path }}"
-
+init_commit = "{{ cookiecutter._init_commit }}"
+init_commit = False if init_commit == "False" else True
 
 def remove_blank_skin():
     for dirpath, dirnames, filenames in os.walk(
@@ -70,3 +72,12 @@ elif import_type == "Layout":
     os.mkdir(dst)
     src = rm_layouts_path + os.sep + importing + os.sep + "Rainmeter.ini"
     shutil.copy2(src, dst)
+
+if init_commit:
+    run(["git", "init"])
+    try:
+        os.remove("README.md")
+    except FileNotFoundError:
+        pass
+    run(["git", "add", "."])
+    run(["git", "commit", "-m", "Initial commit"])

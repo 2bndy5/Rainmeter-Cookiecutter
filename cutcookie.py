@@ -8,7 +8,8 @@ import winreg
 import configparser
 import json
 from cookiecutter.main import cookiecutter
-from cookiecutter import prompt
+from cookiecutter import prompt, vcs
+
 
 defaults = {
     "author_full_name": os.getenv("USERNAME"),
@@ -26,6 +27,7 @@ defaults = {
     "short_description": "A collection of my skins for Rainmeter",
     "license": ["MIT", "CC BY-SA", "GNU GPLv3"],
     "_copy_without_render": ["*.github/*"],
+    "_init_commit": "no",
 }
 
 
@@ -118,6 +120,13 @@ def prompt_user():
                 defaults["repository_name"] = (
                     defaults[key].replace(" ", "_") + "_Rainmeter_Skin"
                 )
+    if vcs.is_vcs_installed("git"):
+        print("git is installed")
+        init_commit = prompt.read_user_yes_no("Create initial commit? (y/n)", "y")
+        if isinstance(init_commit, str):
+            init_commit = True if init_commit == "y" else False
+        defaults["_init_commit"] = init_commit
+
 
     # NOTE for debugging -> dump to JSON
     # with open("defaults.json", "w") as file:
