@@ -8,7 +8,7 @@
     :alt: Rainmeter Required (latest stable)
     :target: https://github.com/rainmeter/rainmeter/releases/latest
 
-.. image:: https://img.shields.io/github/license/blah-name/blah-repo?style=plastic
+.. image:: https://img.shields.io/github/license/{{ cookiecutter.github_username }}/{{ cookiecutter.repository_name }}?style=plastic
     :alt: license
 
 {{ cookiecutter.project_name }}
