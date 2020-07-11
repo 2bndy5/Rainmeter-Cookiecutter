@@ -21,7 +21,7 @@ jobs:
       # Runs a rmskin packager action
       - name: Run Build action
         id: builder
-        uses: 2bndy5/rmskin-action@v1.1.2
+        uses: 2bndy5/rmskin-action@master
 
       # Use the output from the `builder` step
       - name: Print the output filename
