@@ -2,6 +2,7 @@
     "author_full_name": "{{ cookiecutter.author_full_name }}",
     "github_username": "{{ cookiecutter.github_username }}",
     "req_rainmeter_version": "{{ cookiecutter.req_rainmeter_version }}",
+    "req_windows_version": "{{ cookiecutter.req_windows_version }}",
     "_year": "{{ cookiecutter._year }}",
     "_skins_path": "{{ cookiecutter._skins_path }}",
     "_layouts_path": "{{ cookiecutter._layouts_path }}",

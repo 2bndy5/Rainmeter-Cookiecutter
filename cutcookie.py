@@ -15,6 +15,20 @@ defaults = {
     "author_full_name": os.getenv("USERNAME"),
     "github_username": "my.github.account",
     "req_rainmeter_version": "4.3",
+    "req_windows_version": [
+        "Windows XP",
+        "Windows Vista",
+        "Windows 7",
+        "Windows 8.1",
+        "Windows 10",
+    ],
+    "_windows_version_alias": {
+        "Windows XP": "5.1",
+        "Windows Vista": "6.0",
+        "Windows 7": "6.1",
+        "Windows 8.1": "6.3",
+        "Windows 10": "10.0",
+    },
     "_year": time.strftime("%Y", time.localtime()),
     "_skins_path": "",
     "_layouts_path": "",
@@ -53,9 +67,15 @@ def aggregate():
     except FileNotFoundError:
         print("Rainmeter is not installed!")
     if rm_reg_key is not None:
-        defaults["req_rainmeter_version"] = winreg.QueryValueEx(
+        temp = winreg.QueryValueEx(
             rm_reg_key, "DisplayVersion"
-        )[0].replace(" r", ".")
+        )[0]
+        temp = temp.replace(" beta r", ".")
+        temp = temp.replace(" r", ".")
+        temp = temp.rsplit(".")
+        while len(temp) < 4:
+            temp.insert(len(temp) - 1, "0")
+        defaults["req_rainmeter_version"] = ".".join(temp)
         defaults["_layouts_path"] = os.getenv("APPDATA") + os.sep + "Rainmeter\\Layouts"
 
         # get path to Rainmeter skins
@@ -77,6 +97,10 @@ def aggregate():
         # now collect layouts
         for d in os.listdir(defaults["_layouts_path"]):
             defaults["installed"]["Layout"].append(d)
+    else:  # Rainmeter not installed, so cannot import layout or skin
+        # only remove Layout from import_type options because
+        # Skin options to import will only contain "Create a new skin"
+        defaults["import_type"].remove("Layout")
 
 
 def prompt_user():
@@ -87,6 +111,7 @@ def prompt_user():
                 defaults[key] = prompt.read_user_choice(key, value)
             elif isinstance(value, str):
                 defaults[key] = prompt.read_user_variable(key, value)
+            # adjust defaults based on special conditions
             if key.endswith("import_type"):
                 defaults["import"] = defaults["installed"][defaults[key]]
             elif key.endswith("import"):
@@ -120,12 +145,22 @@ def prompt_user():
                 defaults["repository_name"] = (
                     defaults[key].replace(" ", "_") + "_Rainmeter_Skin"
                 )
+            elif key.endswith("req_windows_version"):
+                defaults["req_windows_version"] = defaults["_windows_version_alias"][defaults[key]]
+            elif key.endswith("req_rainmeter_version"):
+                # restrict windows version based on rainmeter version
+                if float(defaults[key][:3]) >= 4.0:
+                    defaults["req_windows_version"].remove("Windows XP")
+                    defaults["req_windows_version"].remove("Windows Vista")
     if vcs.is_vcs_installed("git"):
         print("git is installed")
         init_commit = prompt.read_user_yes_no("Create initial commit? (y/n)", "y")
         if isinstance(init_commit, str):
             init_commit = True if init_commit == "y" else False
         defaults["_init_commit"] = init_commit
+    
+
+    
 
 
     # NOTE for debugging -> dump to JSON
