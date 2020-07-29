@@ -48,6 +48,9 @@ Features
 
   .. tip:: Read the comments in the ``RMSKIN.ini`` file to better
     understand what it is used for.
+* Choose minimum required Windows version which is automatically limited to
+  only the versions supported by specified minimum required version of
+  Rainmeter.
 
 How To Use
 ==========
