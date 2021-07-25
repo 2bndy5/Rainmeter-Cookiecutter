@@ -1,7 +1,7 @@
 Introduction
 ============
 
-A cookiecutter template reository for developing Rainmeter Skin(s)
+A cookiecutter template repository for developing Rainmeter Skin(s)
 via github.
 
 Features
@@ -12,7 +12,7 @@ Features
   ``<repo-name>_<version_tag>.rmskin`` file) to your published
   releases for easy installation.
 * An extra workflow (includes a badge) to scan the repository for
-  malicious software using ClamAV. This is useful if your reository
+  malicious software using ClamAV. This is useful if your repository
   contains executable binaries like 3rd-party Rainmeter plugins or
   exe files. That said, it is still *strongly recommended* that you
   monitor what executable binary files get added to your repository.
