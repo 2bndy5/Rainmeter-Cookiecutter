@@ -10,7 +10,7 @@ jobs:
     name: AV scan
     steps:
       - name: Checkout resources to scan
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - name: AV scan using ClamAV
-        uses: djdefi/gitavscan@2
+        uses: djdefi/gitavscan@11
