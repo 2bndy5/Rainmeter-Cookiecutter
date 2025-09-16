@@ -1,14 +1,19 @@
+# /// script
+# dependencies = [
+#   "cookiecutter",
+# ]
+# ///
 """
 This script will probe your system for rainmeter info to fill in the
 default variables used in the cookiecutter process.
 """
+
 import os
 import time
 import winreg
 import configparser
-import json
-from cookiecutter.main import cookiecutter
-from cookiecutter import prompt, vcs
+from cookiecutter.main import cookiecutter  # type: ignore
+from cookiecutter import prompt, vcs  # type: ignore
 
 
 defaults = {
@@ -47,7 +52,7 @@ defaults = {
 
 def read_config(file_path):
     parser = configparser.ConfigParser(default_section="Rainmeter")
-    try:  # trys to open file with default utf-8 encoding
+    try:  # tries to open file with default utf-8 encoding
         parser.read(file_path)
     except configparser.MissingSectionHeaderError:
         # This exception on this file likely means encoding is utf-16
@@ -67,9 +72,7 @@ def aggregate():
     except FileNotFoundError:
         print("Rainmeter is not installed!")
     if rm_reg_key is not None:
-        temp = winreg.QueryValueEx(
-            rm_reg_key, "DisplayVersion"
-        )[0]
+        temp = winreg.QueryValueEx(rm_reg_key, "DisplayVersion")[0]
         temp = temp.replace(" beta r", ".")
         temp = temp.replace(" r", ".")
         temp = temp.rsplit(".")
@@ -82,7 +85,7 @@ def aggregate():
         parsed = read_config(os.getenv("APPDATA") + "\\Rainmeter\\Rainmeter.ini")
         if "Rainmeter" in parsed and "SkinPath" in parsed["Rainmeter"]:
             if parsed["Rainmeter"]["SkinPath"].endswith(os.sep):
-                # remove trailing path seperator
+                # remove trailing path separator
                 defaults["_skins_path"] = parsed["Rainmeter"]["SkinPath"][:-1]
             else:
                 defaults["_skins_path"] = parsed["Rainmeter"]["SkinPath"]
@@ -119,7 +122,7 @@ def prompt_user():
                 defaults["repository_name"] = (
                     defaults[key].replace(" ", "_") + "_Rainmeter_Skin"
                 )
-                # promt user to pick skin to load if importing an installed skin
+                # prompt user to pick skin to load if importing an installed skin
                 if (
                     defaults["import_type"] == "Skin"
                     and defaults["import"] != "Create a new skin"
@@ -133,7 +136,8 @@ def prompt_user():
                             if f.endswith(".ini"):
                                 skin_configs.append(
                                     dirpath.replace(
-                                        defaults["_skins_path"] + os.sep, "",
+                                        defaults["_skins_path"] + os.sep,
+                                        "",
                                     )
                                     + os.sep
                                     + f
@@ -146,7 +150,9 @@ def prompt_user():
                     defaults[key].replace(" ", "_") + "_Rainmeter_Skin"
                 )
             elif key.endswith("req_windows_version"):
-                defaults["req_windows_version"] = defaults["_windows_version_alias"][defaults[key]]
+                defaults["req_windows_version"] = defaults["_windows_version_alias"][
+                    defaults[key]
+                ]
             elif key.endswith("req_rainmeter_version"):
                 # restrict windows version based on rainmeter version
                 if float(defaults[key][:3]) >= 4.0:
@@ -158,10 +164,6 @@ def prompt_user():
         if isinstance(init_commit, str):
             init_commit = True if init_commit == "y" else False
         defaults["_init_commit"] = init_commit
-    
-
-    
-
 
     # NOTE for debugging -> dump to JSON
     # with open("defaults.json", "w") as file:
@@ -173,4 +175,3 @@ if __name__ == "__main__":
     prompt_user()
     # now pass user input and begin cookie-cutting
     cookiecutter(".", output_dir="..", extra_context=defaults, no_input=True)
-
