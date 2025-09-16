@@ -3,12 +3,12 @@ import shutil
 import configparser
 from subprocess import run
 
-import_type = "{{ cookiecutter.import_type }}"
-importing = "{{ cookiecutter.import }}"
-rm_skins_path = r"{{ cookiecutter._skins_path }}"
-rm_layouts_path = r"{{ cookiecutter._layouts_path }}"
-init_commit = "{{ cookiecutter._init_commit }}"
-init_commit = False if init_commit == "False" else True
+import_type: str = "{{ cookiecutter.import_type }}"
+importing: str = "{{ cookiecutter.import }}"
+rm_skins_path: str = r"{{ cookiecutter._skins_path }}"
+rm_layouts_path: str = r"{{ cookiecutter._layouts_path }}"
+init_commit: bool = False if "{{ cookiecutter._init_commit }}" == "False" else True
+
 
 def remove_blank_skin():
     for dirpath, dirnames, filenames in os.walk(
@@ -29,7 +29,7 @@ def import_skin(root_config):
 
 def read_config(file_path):
     parser = configparser.ConfigParser(default_section="Rainmeter")
-    try:  # trys to open file with default utf-8 encoding
+    try:  # tries to open file with default utf-8 encoding
         parser.read(file_path)
     except configparser.MissingSectionHeaderError:
         # This exception on this file likely means encoding is utf-16
@@ -48,7 +48,7 @@ def gather_layout_deps(layout_name):
         if "Active" in parsed[key] and bool(int(parsed[key]["Active"])):
             # only grab root config name as a necessary skin for layout
             root_config = key.split(os.sep)[0]
-            if not root_config in needed_skins:
+            if root_config not in needed_skins:
                 # avoid duplicate entries
                 needed_skins.append(root_config)
     return needed_skins

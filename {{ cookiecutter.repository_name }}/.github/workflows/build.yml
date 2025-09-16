@@ -3,11 +3,11 @@ name: RMSKIN Packager
 
 on:
   push:
+    branches: [main, master]
+    tags:
+      - "*"
   pull_request:
-  release:
-    types:
-      - published
-      # - edited
+    branches: [main, master]
 
 jobs:
   Build_n_Release:
@@ -16,26 +16,29 @@ jobs:
     steps:
       # Checkout code
       - name: Checkout this Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
 
       # Runs a rmskin packager action
       - name: Run Build action
         id: builder
-        uses: 2bndy5/rmskin-action@v1.1.8
+        uses: 2bndy5/rmskin-action@856f1ee5e9db0860c82862345a88bb8e5b40e968 # v2.0.1
 
       # upload the output from the `builder` step as workflow artifact
       - name: Archive rmskin file as artifact
-        uses: actions/upload-artifact@v3
-        if: github.event_name != 'release'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         with:
-          name: ${{ steps.builder.outputs.arc_name }}
-          path: ${{ github.workspace }}/${{ steps.builder.outputs.arc_name }}
+          name: ${{ steps.builder.outputs.arc-name }}
+          path: ${{ steps.builder.outputs.arc-name }}
+          if-no-files-found: error
 
       # Upload the asset
       - name: Upload Release Asset
-        if: github.event_name == 'release'
-        uses: shogo82148/actions-upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.builder.outputs.arc_name }}
-          asset_content_type: application/zip
+        if: startsWith(github.ref, 'refs/tags/')
+        run: gh release upload "${TAG}" "${ASSET_PATH}"
+        env:
+          TAG: ${{ github.ref_name }}
+          ASSET_PATH: ${{ steps.builder.outputs.arc-name }}
+          GITHUB_TOKEN: ${{ github.token }}

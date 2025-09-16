@@ -1,0 +1,19 @@
+version: "0.2"
+words:
+  - bndy
+  - bxml
+  - cookiecutter
+  - djdefi
+  - endfor
+  - gitavscan
+  - pipx
+  - Rainmeter
+  - rmskin
+  - topdown
+  - venv
+ignorePaths:
+  - .gitignore
+  - .venv/
+  - .env/
+  - env/
+  - venv/
