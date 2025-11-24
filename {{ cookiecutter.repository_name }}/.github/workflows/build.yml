@@ -16,14 +16,14 @@ jobs:
     steps:
       # Checkout code
       - name: Checkout this Repo
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           persist-credentials: false
 
       # Runs a rmskin packager action
       - name: Run Build action
         id: builder
-        uses: 2bndy5/rmskin-action@856f1ee5e9db0860c82862345a88bb8e5b40e968 # v2.0.1
+        uses: 2bndy5/rmskin-action@8a88b10c5b4ac8d0df015800eae8a12ee53c5fe2 # v2.0.2
 
       # upload the output from the `builder` step as workflow artifact
       - name: Archive rmskin file as artifact
