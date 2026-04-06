@@ -23,7 +23,7 @@ jobs:
       # Runs a rmskin packager action
       - name: Run Build action
         id: builder
-        uses: 2bndy5/rmskin-action@a6a904f075e630ae7420c5cfe254c3cd20476aa6 # v2.0.3
+        uses: 2bndy5/rmskin-action@cefb988ebf291b17d3d4dc442d3ac8cb162dde64 # v2.0.4
 
       # upload the output from the `builder` step as workflow artifact
       - name: Archive rmskin file as artifact
